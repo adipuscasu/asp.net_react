@@ -4,9 +4,8 @@ export interface QuestionData {
   content: string;
   userName: string;
   created: Date;
-  answers: Array<AnswerData>;
+  answers: AnswerData[];
 }
-
 export interface AnswerData {
   answerId: number;
   content: string;
@@ -14,12 +13,12 @@ export interface AnswerData {
   created: Date;
 }
 
-const questions: Array<QuestionData> = [
+const questions: QuestionData[] = [
   {
     questionId: 1,
     title: 'Why should I learn TypeScript?',
     content:
-      ' TypeScript seems to be getting popular so I wondered whetherd it is worth my time learning it? What benefits does it give over JavaScript?',
+      'TypeScript seems to be getting popular so I wondered whether it is worth my time learning it? What benefits does it give over JavaScript?',
     userName: 'Bob',
     created: new Date(),
     answers: [
@@ -31,7 +30,8 @@ const questions: Array<QuestionData> = [
       },
       {
         answerId: 2,
-        content: 'So, that you can use JavaScript features of tomorrow, today',
+        content:
+          'So, that you can use the JavaScript features of tomorrow, today',
         userName: 'Fred',
         created: new Date(),
       },
@@ -39,7 +39,7 @@ const questions: Array<QuestionData> = [
   },
   {
     questionId: 2,
-    title: 'Which state management tool should I used?',
+    title: 'Which state management tool should I use?',
     content:
       'There seem to be a fair few state management tools around for React - React, Unstated, ... Which one should I use?',
     userName: 'Bob',
@@ -48,6 +48,11 @@ const questions: Array<QuestionData> = [
   },
 ];
 
-export const getUnansweredQuestions = (): Array<QuestionData> => {
+export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
+  await wait(500);
   return questions.filter((q) => q.answers.length === 0);
+};
+
+const wait = (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
