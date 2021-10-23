@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QandAService.Web", "QandAService\QandAService.Web.csproj", "{F4A7D77E-66BF-4BAB-B033-5B1A301A194C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureClient", "SecureClient\SecureClient.csproj", "{3999F871-030C-4BB7-B0D0-C1338F70EDAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F4A7D77E-66BF-4BAB-B033-5B1A301A194C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4A7D77E-66BF-4BAB-B033-5B1A301A194C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4A7D77E-66BF-4BAB-B033-5B1A301A194C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3999F871-030C-4BB7-B0D0-C1338F70EDAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3999F871-030C-4BB7-B0D0-C1338F70EDAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3999F871-030C-4BB7-B0D0-C1338F70EDAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3999F871-030C-4BB7-B0D0-C1338F70EDAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

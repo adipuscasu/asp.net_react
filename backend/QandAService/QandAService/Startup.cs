@@ -1,22 +1,19 @@
-using ADO.NET_Demo.Web.Areas.Identity.Data;
+using System.Text;
 using ADO.NET_Demo.Web.DataAccess;
 using ADO.NET_Demo.Web.Extensions;
 using ADO.NET_Demo.Web.Models;
 using ADO.NET_Demo.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QandAService.Web.Extensions;
 using Serilog;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ADO.NET_Demo.Web
 {
@@ -39,36 +36,46 @@ namespace ADO.NET_Demo.Web
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x =>
+            .AddJwtBearer(opt =>
             {
-                x.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = context =>
-                    {
-                        var userMachine = context
-                                            .HttpContext
-                                            .RequestServices
-                                            .GetRequiredService<UserManager<AppUser>>();
-                        var user = userMachine.GetUserAsync(context.HttpContext.User);
-                        if (user is null)
-                        {
-                            context.Fail("Unauthorized");
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
+                opt.Audience = Configuration["AAD:ResourceId"];
+                opt.Authority = $"{Configuration["AAD:InstanceId"]}{Configuration["AAD:TenantId"]}";
+                //opt.Events = new JwtBearerEvents
+                //{
+                //    OnTokenValidated = context =>
+                //    {
+                //        var userMachine = context
+                //                            .HttpContext
+                //                            .RequestServices
+                //                            .GetRequiredService<UserManager<AppUser>>();
+                //        var user = userMachine.GetUserAsync(context.HttpContext.User);
+                //        if (user is null)
+                //        {
+                //            context.Fail("Unauthorized");
+                //        }
+                //        return Task.CompletedTask;
+                //    }
+                //};
+                //opt.RequireHttpsMetadata = false;
+                //opt.SaveToken = true;
+                //opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                //{
+                //    ValidateIssuerSigningKey = true,
+                //    IssuerSigningKey = new SymmetricSecurityKey(key),
+                //    ValidateIssuer = false,
+                //    ValidateAudience = false
+                //};
             });
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .RequireRole(new string[] { "DaemonAppRole", "Reader" })
+                            .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }
+                );
 
             services
                 .AddSwaggerGen(c =>
@@ -102,6 +109,7 @@ namespace ADO.NET_Demo.Web
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
             Log.Logger = new LoggerConfiguration()
@@ -110,7 +118,6 @@ namespace ADO.NET_Demo.Web
 
             Log.Information("Configuring services");
 
-            app.UseHttpsRedirection();
 
             app.ConfigureCustomExceptionMiddleware();
 
