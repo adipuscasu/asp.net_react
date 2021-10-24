@@ -7,15 +7,15 @@ import { PageTitle } from './PageTitle';
 export const HomePage = () => {
   const [questions, setQuestions] = React.useState<QuestionData[]>([]);
   const [questonsLoading, setQuestionsLoading] = React.useState(true);
-  React.useEffect(async () => {
-    console.log('first rendered');
-    const doGetUnansweredQuestions = async () => {
-      const unansweredQuestions = await getUnansweredQuestions();
-      setQuestions(unansweredQuestions);
-      setQuestionsLoading(false);
-    };
-    doGetUnansweredQuestions();
-  }, []);
+  // React.useEffect(async () => {
+  //   console.log('first rendered');
+  //   const doGetUnansweredQuestions = async () => {
+  //     const unansweredQuestions = await getUnansweredQuestions();
+  //     setQuestions(unansweredQuestions);
+  //     setQuestionsLoading(false);
+  //   };
+  //   doGetUnansweredQuestions();
+  // }, []);
 
   return (
     <Page>

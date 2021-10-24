@@ -74,8 +74,7 @@ namespace ADO.NET_Demo.Web
                             .RequireRole(new string[] { "DaemonAppRole", "Reader" })
                             .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            }
-                );
+            });
 
             services
                 .AddSwaggerGen(c =>

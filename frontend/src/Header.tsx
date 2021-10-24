@@ -1,7 +1,11 @@
 import React from 'react';
 import { UserIcon } from './Icons';
 
-export const Header = () => (
+interface Props {
+  children: React.ReactNode;
+}
+
+export const Header = ({ children }: Props) => (
   <div>
     <a href="./">Q & A</a>
     <input type="text" placeholder="Search..." />
@@ -9,5 +13,6 @@ export const Header = () => (
       <UserIcon />
       <span>Sign in</span>
     </a>
+    <h2>{children}</h2>
   </div>
 );
